@@ -56,6 +56,7 @@
     try{await fs.doc('users/'+u.uid).set({name:u.displayName||u.email,email:u.email||'',photo:u.photoURL||'',last:new Date().toISOString()},{merge:true})}catch(e){}
     fs.doc('team/roster').onSnapshot(s=>{roster=(s.exists&&s.data().members)||{}},()=>{});
     try{const s=await fs.doc('team/roster').get();roster=(s.exists&&s.data().members)||{}}catch(e){}
+    if(!isOwner()&&!roster[u.uid]){try{const r=fs.doc('requests/'+u.uid);if(!(await r.get()).exists)await r.set({name:u.displayName||u.email,email:u.email||'',at:new Date().toISOString()})}catch(e){}}
     readyRes();
   });
   window.msmSignOut=()=>auth.signOut().then(()=>location.reload());
