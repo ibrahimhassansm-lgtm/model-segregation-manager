@@ -4,6 +4,9 @@
 (function(){
   const CFG=window.MSM_FIREBASE||{};
   const OWNER=String(CFG.ownerEmail||'').toLowerCase();
+  if (!CFG.firebase || CFG.firebase.projectId !== 'msm-studio360-dev' || CFG.firebase.authDomain !== 'msm-studio360-dev.firebaseapp.com') {
+    throw new Error('Development Firebase is not configured. Production access is blocked.');
+  }
   firebase.initializeApp(CFG.firebase);
   const auth=firebase.auth(), fs=firebase.firestore();
   const err=e=>({code:({'permission-denied':'invalid_argument','unauthenticated':'invalid_argument','not-found':'invalid_argument','resource-exhausted':'resource_exhausted','unavailable':'unavailable'})[e&&e.code]||'unavailable',message:(e&&e.message)||String(e)});
