@@ -1,0 +1,35 @@
+// DRAFT: emulator validation required before deployment.
+rules_version = '2';
+service cloud.firestore {
+ match /databases/{database}/documents {
+  function signedIn() { return request.auth != null; }
+  function isOwner() { return signedIn() && request.auth.token.email_verified == true && request.auth.token.email == "ibrahimhassan.sm@gmail.com"; }
+  function accessPath() { return /databases/$(database)/documents/access/$(request.auth.uid); }
+  function hasAccess() { return signedIn() && exists(accessPath()); }
+  function access() { return get(accessPath()).data; }
+  function roster() { return get(/databases/$(database)/documents/team/roster).data.members; }
+  function legacyRole() { return signedIn() && exists(/databases/$(database)/documents/team/roster) && request.auth.uid in roster() ? roster()[request.auth.uid].role : 'none'; }
+  function role() { return hasAccess() ? (access().status == 'active' ? access().role : 'none') : legacyRole(); }
+  function onTeam() { return isOwner() || (signedIn() && role() in ['admin','member','viewer']); }
+  function isMember() { return isOwner() || (signedIn() && role() in ['admin','member']); }
+  function isAdmin() { return isOwner() || (signedIn() && role() == 'admin'); }
+  match /access/{uid} {
+   allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);
+   allow create, update: if isOwner() && request.resource.data.role in ['admin','member','viewer'] && request.resource.data.status in ['active','suspended'];
+   allow delete: if false;
+  }
+  match /users/{uid} { allow read: if onTeam() || (signedIn() && request.auth.uid == uid); allow write: if signedIn() && request.auth.uid == uid; }
+  // Temporarily owner-only roster writes until individual admin workflows are migrated.
+  match /team/roster { allow read: if signedIn(); allow write: if isOwner(); }
+  match /projectcfg/{p} { allow read: if onTeam(); allow write: if isAdmin(); }
+  match /templates/{t} { allow read: if onTeam(); allow write: if isAdmin(); }
+  match /settings/{s} { allow read: if onTeam(); allow write: if isAdmin(); }
+  match /projects/{p} {
+   allow read: if onTeam(); allow write: if isAdmin();
+   match /models/{m} { allow read: if onTeam(); allow write: if isMember(); }
+  }
+  match /activity/{a} { allow read: if onTeam(); allow create: if isMember(); }
+  match /requests/{uid} { allow read, delete: if isAdmin() || (signedIn() && request.auth.uid == uid); allow create, update: if signedIn() && request.auth.uid == uid; }
+  // No broad owner fallback: inventory additional collections before deployment.
+ }
+}
