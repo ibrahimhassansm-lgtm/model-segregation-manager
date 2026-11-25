@@ -28,12 +28,12 @@
   const fire=e=>{e.scrollIntoView({block:'center'});['pointerdown','mousedown','pointerup','mouseup','click'].forEach(t=>e.dispatchEvent(new MouseEvent(t,{bubbles:true,cancelable:true,view:window,button:0})))};
   const waitFor=async(fn,ms=15000)=>{const t0=Date.now();while(Date.now()-t0<ms){try{const v=fn();if(v)return v}catch(e){}await w(250)}return null};
   const setVal=(i,v)=>{const s=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;s.call(i,v);i.dispatchEvent(new Event('input',{bubbles:true}))};
-  async function filters(){
+  async function filters(cur){
     const open=await waitFor(()=>document.querySelector('[data-testid="search-button"],[data-testid="action-header-filter"],button[aria-label="Filter"]'));
     if(open&&!byText('h2,h3,div,span',/^Search and filter settings$/i))fire(open);
     if(!await waitFor(()=>byText('*',/^Search and filter settings$/i)))return 'panel';
     await w(600);
-    const all=byText('label,span',/^All folders$/i);if(all)fire(all);
+    const all=byText('label,span',cur?/^Current folder$/i:/^All folders$/i);if(cur&&!all)return 'Current folder option';if(all)fire(all);
     for(const [label,opt] of [['Types','Files'],['File types','RVT']]){
       const lab=byText('label,div,span',new RegExp('^'+label+'$','i'));if(!lab)return label+' heading';
       const hdr=lab.closest('[class*=Header]')||lab.parentElement.parentElement;const box=hdr.parentElement.querySelector('[role=combobox]');if(!box)return label+' box';
@@ -46,6 +46,6 @@
     for(let t=0;t<2;t++){if(await waitFor(()=>document.querySelector('.MatrixTable__body')&&/search results/i.test(document.body.innerText),12000))return true;fire(go)}
     return true}
   window.addEventListener('message',async e=>{if(e.source!==window||!e.data||e.data.msmDo!=='filters')return;
-    let r;try{r=await filters()}catch(err){r='error: '+(err&&err.message)}
+    let r;try{r=await filters(!!e.data.cur)}catch(err){r='error: '+(err&&err.message)}
     window.postMessage({msmFiltersDone:r},location.origin)});
 })();
