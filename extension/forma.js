@@ -54,7 +54,7 @@
     if(auto)setTimeout(()=>{try{window.close()}catch(e){}},1500);
     setTimeout(()=>say('Scan models for MSM'),6000)}
 
-  btn.onclick=()=>run(false);
+  btn.onclick=()=>run(!(document.querySelector('.MatrixTable__body')&&/search results/i.test(document.body.innerText)));
   let started=false;
   const watch=async()=>{
     for(let i=0;i<300&&!started;i++){
