@@ -11,7 +11,7 @@
   const say=t=>{btn.textContent=t};say('Scan models for MSM');document.body.appendChild(btn);
 
   async function filters(){
-    const open=await waitFor(()=>document.querySelector('[aria-label*="earch" i][role=button],button[aria-label*="earch" i],button[title*="earch" i]')||byText('button',/^search$/i));
+    const open=await waitFor(()=>document.querySelector('[data-testid="search-button"]')||document.querySelector('button[aria-label*="earch" i],button[title*="earch" i]'));
     if(open&&!byText('h2,h3,div,span',/^Search and filter settings$/i))fire(open);
     if(!await waitFor(()=>byText('*',/^Search and filter settings$/i)))return false;
     const all=byText('label,span',/^All folders$/i);if(all)fire(all);
@@ -23,7 +23,7 @@
       if(inp&&opt==='RVT'){setVal(inp,'RVT');await w(500)}
       const o=await waitFor(()=>[...document.querySelectorAll('[role=option],li.SelectBox__option')].find(e=>new RegExp('^'+opt+'$','i').test(txt(e))&&e.offsetParent!==null),4000);if(!o)return false;fire(o);await w(300);
       fire(lab);await w(300)}
-    const go=[...document.querySelectorAll('button')].reverse().find(e=>/^search$/i.test(txt(e))&&e.offsetParent!==null);if(!go)return false;fire(go);return true}
+    const go=[...document.querySelectorAll('button')].reverse().find(e=>/^search$/i.test(txt(e))&&e.offsetParent!==null&&!/TabTitle/.test(e.className));if(!go)return false;fire(go);return true}
 
   async function scan(){
     const b=await waitFor(()=>document.querySelector('.MatrixTable__body')&&/search results/i.test(document.body.innerText)&&document.querySelector('.MatrixTable__body'),20000);

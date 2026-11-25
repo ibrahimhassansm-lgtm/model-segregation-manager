@@ -22,7 +22,7 @@ async function inPage() {
   const say = t => { try { window.__msmStatus(t); } catch (e) {} };
 
   async function filters() {
-    const open = await waitFor(() => document.querySelector('button[aria-label*="earch" i],button[title*="earch" i],[aria-label*="earch" i][role=button]') || byText('button', /^search$/i));
+    const open = await waitFor(() => document.querySelector('[data-testid="search-button"]') || document.querySelector('button[aria-label*="earch" i],button[title*="earch" i]'));
     if (open && !byText('h2,h3,div,span', /^Search and filter settings$/i)) fire(open);
     if (!await waitFor(() => byText('*', /^Search and filter settings$/i))) return false;
     const all = byText('label,span', /^All folders$/i); if (all) fire(all);
@@ -35,7 +35,7 @@ async function inPage() {
       const o = await waitFor(() => [...document.querySelectorAll('[role=option],li.SelectBox__option')].find(e => new RegExp('^' + opt + '$', 'i').test(txt(e)) && e.offsetParent !== null), 4000); if (!o) return false;
       fire(o); await w(300); fire(lab); await w(300);
     }
-    const go = [...document.querySelectorAll('button')].reverse().find(e => /^search$/i.test(txt(e)) && e.offsetParent !== null);
+    const go = [...document.querySelectorAll('button')].reverse().find(e => /^search$/i.test(txt(e)) && e.offsetParent !== null && !/TabTitle/.test(e.className));
     if (!go) return false; fire(go); return true;
   }
 
