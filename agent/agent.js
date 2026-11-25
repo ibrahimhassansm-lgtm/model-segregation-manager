@@ -22,7 +22,7 @@ async function inPage() {
   const say = t => { try { window.__msmStatus(t); } catch (e) {} };
 
   async function filters() {
-    const open = await waitFor(() => document.querySelector('[data-testid="search-button"]') || document.querySelector('button[aria-label*="earch" i],button[title*="earch" i]'));
+    const open = await waitFor(() => document.querySelector('[data-testid="search-button"],[data-testid="action-header-filter"],button[aria-label="Filter"]') || document.querySelector('button[aria-label*="earch" i],button[title*="earch" i]'));
     if (open && !byText('h2,h3,div,span', /^Search and filter settings$/i)) fire(open);
     if (!await waitFor(() => byText('*', /^Search and filter settings$/i))) return false;
     const all = byText('label,span', /^All folders$/i); if (all) fire(all);
