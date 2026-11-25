@@ -17,7 +17,7 @@
     const all=byText('label,span',/^All folders$/i);if(all)fire(all);
     for(const [label,opt] of [['Types','Files'],['File types','RVT']]){
       const lab=byText('label,div,span',new RegExp('^'+label+'$','i'));if(!lab)return false;
-      const box=lab.parentElement.querySelector('input,[role=combobox],[role=button]')||lab.nextElementSibling;if(!box)return false;
+      const hdr=lab.closest('[class*=Header]')||lab.parentElement.parentElement;const box=(hdr&&hdr.parentElement&&hdr.parentElement.querySelector('[role=combobox]'))||lab.parentElement.querySelector('input,[role=combobox],[role=button]');if(!box)return false;
       fire(box);await w(400);
       const inp=document.activeElement&&document.activeElement.tagName==='INPUT'?document.activeElement:box.querySelector&&box.querySelector('input');
       if(inp&&opt==='RVT'){setVal(inp,'RVT');await w(500)}
