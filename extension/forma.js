@@ -55,6 +55,13 @@
     setTimeout(()=>say('Scan models for MSM'),6000)}
 
   btn.onclick=()=>run(false);
-  (async()=>{try{const {msmReq}=await chrome.storage.local.get('msmReq');
-    if(msmReq&&Date.now()-msmReq.ts<120000&&location.href.includes(msmReq.project))run(true)}catch(e){}})();
+  let started=false;
+  const watch=async()=>{
+    for(let i=0;i<300&&!started;i++){
+      try{const {msmReq}=await chrome.storage.local.get('msmReq');
+        if(!msmReq||Date.now()-msmReq.ts>600000)return;
+        if(location.href.includes(msmReq.project)&&document.querySelector('.MatrixTable__body, [role=tree], [role=row]')){started=true;await w(1500);run(true);return}
+        if(i===0)say('Waiting for you to sign in…')}catch(e){return}
+      await w(2000)}};
+  watch();
 })();
