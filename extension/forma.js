@@ -52,10 +52,12 @@
         if(x&&x.lin){linked++;const u=location.origin+location.pathname+'?'+(x.fol?'folderUrn='+encodeURIComponent(x.fol)+'&':'')+'entityId='+encodeURIComponent(x.lin)+'&viewModel=detail&moduleId=folders';return l+'\t'+u}return l}).join('\n');
       window.__msmLinked=linked}
     if(text===null){btn.disabled=false;return}
+    let pathSkip=0;try{const {msmReq}=await chrome.storage.local.get('msmReq');const segs=((msmReq&&msmReq.path)||'').split(/[\/>\\|]+/).map(x=>x.trim().toLowerCase()).filter(Boolean);
+      if(segs.length&&text){const keep=text.split('\n').filter(l=>{const p=(l.split('\t')[1]||'').toLowerCase();let i=0;for(const s of segs){i=p.indexOf(s,i);if(i<0)return false;i+=s.length}return true});pathSkip=text.split('\n').length-keep.length;text=keep.join('\n')}}catch(e){}
     const count=text?text.split('\n').length:0;
     try{await chrome.storage.local.set({msmForma:{text,ts:Date.now(),count,url:location.origin+location.pathname}});await chrome.storage.local.remove('msmReq')}catch(e){}
     try{await navigator.clipboard.writeText(text)}catch(e){}
-    say('✓ '+count+' models sent to MSM'+(window.__msmLinked?' ('+window.__msmLinked+' with exact links)':''));btn.disabled=false;
+    say('✓ '+count+' models sent to MSM'+(pathSkip?' ('+pathSkip+' outside the chosen folder skipped)':'')+(window.__msmLinked?' ('+window.__msmLinked+' with exact links)':''));btn.disabled=false;
     if(auto)setTimeout(()=>{try{window.close()}catch(e){}},1500);
     setTimeout(()=>say('Scan models for MSM'),6000)}
 
