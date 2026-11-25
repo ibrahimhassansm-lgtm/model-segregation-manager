@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "MSM Forma Scanner",
-  "version": "1.3.6",
+  "version": "1.4.0",
   "description": "Adds a Scan button inside Autodesk Forma and sends the model list to Model Segregation Manager. No API, no sign-in.",
   "permissions": [
     "storage"

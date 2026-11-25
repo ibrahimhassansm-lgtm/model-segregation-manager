@@ -10,7 +10,9 @@
   btn.style.cssText='position:fixed;right:16px;bottom:16px;z-index:99999;background:#0696d7;color:#fff;border:0;border-radius:6px;padding:10px 14px;font:600 13px sans-serif;cursor:pointer;box-shadow:0 2px 8px #0004';
   const say=t=>{btn.textContent=t};say('Scan models for MSM');document.body.appendChild(btn);
 
-  async function filters(){
+  function filters(){return new Promise(res=>{const h=e=>{if(e.source===window&&e.data&&e.data.msmFiltersDone!==undefined){window.removeEventListener('message',h);const r=e.data.msmFiltersDone;if(r!==true)say('Could not set filters at: '+r);res(r===true)}};
+    window.addEventListener('message',h);window.postMessage({msmDo:'filters'},location.origin);setTimeout(()=>{window.removeEventListener('message',h);res(false)},90000)})}
+  async function filtersOld(){
     say('Step 1: opening Search');const open=await waitFor(()=>document.querySelector('[data-testid="search-button"],[data-testid="action-header-filter"],button[aria-label="Filter"]')||document.querySelector('button[aria-label*="earch" i],button[title*="earch" i]'));
     if(open&&!byText('h2,h3,div,span',/^Search and filter settings$/i))fire(open);
     if(!await waitFor(()=>byText('*',/^Search and filter settings$/i)))return false;
@@ -41,7 +43,7 @@
   async function run2(auto){
     btn.disabled=true;
     if(auto){say('Setting up the search…');const ok=await filters();
-      if(!ok){say('Set Files + RVT in Search, then press this button');btn.disabled=false;return}}
+      if(!ok){btn.disabled=false;return}}
     let text=await scan();
     if(text){
       const ids=await new Promise(res=>{const h=e=>{if(e.source===window&&e.data&&e.data.msmFound){window.removeEventListener('message',h);res(e.data.msmFound)}};window.addEventListener('message',h);window.postMessage({msmAsk:1},location.origin);setTimeout(()=>{window.removeEventListener('message',h);res([])},1500)});
