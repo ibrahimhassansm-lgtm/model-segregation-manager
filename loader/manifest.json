@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "MSM Forma Scanner (auto-update)",
+  "version": "2.0.0",
+  "description": "Loads the MSM Forma scanner code from GitHub and keeps it up to date by itself.",
+  "minimum_chrome_version": "120",
+  "permissions": ["storage", "userScripts", "alarms"],
+  "host_permissions": [
+    "https://acc.autodesk.com/*",
+    "https://ibrahimhassansm-lgtm.github.io/*"
+  ],
+  "background": { "service_worker": "background.js" },
+  "action": { "default_title": "MSM Forma Scanner" }
+}
