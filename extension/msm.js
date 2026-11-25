@@ -1,11 +1,13 @@
 (()=>{
+  const post=o=>window.postMessage({source:'msm-forma-ext',...o},location.origin);
   const send=async()=>{
     try{const {msmForma}=await chrome.storage.local.get('msmForma');
       if(!msmForma||!msmForma.text||msmForma.sent)return;
-      window.postMessage({source:'msm-forma-ext',type:'forma-list',text:msmForma.text,count:msmForma.count},location.origin);
+      post({type:'forma-list',text:msmForma.text,count:msmForma.count});
       await chrome.storage.local.set({msmForma:{...msmForma,sent:true}})}catch(e){}};
-  window.postMessage({source:'msm-forma-ext',type:'hello'},location.origin);
   chrome.storage.onChanged.addListener((c,a)=>{if(a==='local'&&c.msmForma)setTimeout(send,300)});
-  window.addEventListener('message',e=>{if(e.source===window&&e.data&&e.data.source==='msm-forma-page'&&e.data.type==='ready')send()});
-  document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{window.postMessage({source:'msm-forma-ext',type:'hello'},location.origin);send()},1500));
+  window.addEventListener('message',async e=>{const d=e.data;if(e.source!==window||!d||d.source!=='msm-forma-page')return;
+    if(d.type==='ready')send();
+    if(d.type==='request-scan'&&d.project){await chrome.storage.local.set({msmReq:{ts:Date.now(),project:d.project}});await chrome.storage.local.remove('msmForma')}});
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{post({type:'hello'});send()},1500));
 })();
