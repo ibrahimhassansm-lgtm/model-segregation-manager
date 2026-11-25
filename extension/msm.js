@@ -8,6 +8,6 @@
   chrome.storage.onChanged.addListener((c,a)=>{if(a==='local'&&c.msmForma)setTimeout(send,300)});
   window.addEventListener('message',async e=>{const d=e.data;if(e.source!==window||!d||d.source!=='msm-forma-page')return;
     if(d.type==='ready')send();
-    if(d.type==='request-scan'&&d.project){await chrome.storage.local.set({msmReq:{ts:Date.now(),project:d.project,path:d.path||'',from:!!d.from}});await chrome.storage.local.remove('msmForma')}});
+    if(d.type==='request-scan'&&d.project){await chrome.storage.local.set({msmReq:{ts:Date.now(),project:d.project}});await chrome.storage.local.remove('msmForma')}});
   document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{post({type:'hello'});send()},1500));
 })();
