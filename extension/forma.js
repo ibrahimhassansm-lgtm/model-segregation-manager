@@ -39,12 +39,18 @@
     btn.disabled=true;
     if(auto){say('Setting up the search…');const ok=await filters();
       if(!ok){say('Set Files + RVT in Search, then press this button');btn.disabled=false;return}}
-    const text=await scan();
+    let text=await scan();
+    if(text){
+      const ids=await new Promise(res=>{const h=e=>{if(e.source===window&&e.data&&e.data.msmFound){window.removeEventListener('message',h);res(e.data.msmFound)}};window.addEventListener('message',h);window.postMessage({msmAsk:1},location.origin);setTimeout(()=>{window.removeEventListener('message',h);res([])},1500)});
+      const by=new Map(ids.map(x=>[x.name.toLowerCase(),x]));let linked=0;
+      text=text.split('\n').map(l=>{const n=l.split('\t')[0].toLowerCase(),x=by.get(n);
+        if(x&&x.lin){linked++;const u=location.origin+location.pathname+'?'+(x.fol?'folderUrn='+encodeURIComponent(x.fol)+'&':'')+'entityId='+encodeURIComponent(x.lin)+'&viewModel=detail&moduleId=folders';return l+'\t'+u}return l}).join('\n');
+      window.__msmLinked=linked}
     if(text===null){say('Open Search > Files > RVT > Search first');btn.disabled=false;setTimeout(()=>say('Scan models for MSM'),4000);return}
     const count=text?text.split('\n').length:0;
     try{await chrome.storage.local.set({msmForma:{text,ts:Date.now(),count}});await chrome.storage.local.remove('msmReq')}catch(e){}
     try{await navigator.clipboard.writeText(text)}catch(e){}
-    say('✓ '+count+' models sent to MSM');btn.disabled=false;
+    say('✓ '+count+' models sent to MSM'+(window.__msmLinked?' ('+window.__msmLinked+' with exact links)':''));btn.disabled=false;
     if(auto)setTimeout(()=>{try{window.close()}catch(e){}},1500);
     setTimeout(()=>say('Scan models for MSM'),6000)}
 
