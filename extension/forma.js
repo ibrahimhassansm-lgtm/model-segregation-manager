@@ -4,7 +4,7 @@
   const waitFor=async(fn,ms=15000)=>{const t0=Date.now();while(Date.now()-t0<ms){try{const v=fn();if(v)return v}catch(e){}await w(250)}return null};
   const txt=e=>(e.textContent||'').trim();
   const byText=(sel,re)=>[...document.querySelectorAll(sel)].find(e=>re.test(txt(e))&&e.offsetParent!==null);
-  const fire=e=>{e.scrollIntoView({block:'center'});e.click()};
+  const fire=e=>{e.scrollIntoView({block:'center'});['pointerdown','mousedown','pointerup','mouseup','click'].forEach(t=>e.dispatchEvent(new MouseEvent(t,{bubbles:true,cancelable:true,view:window,button:0})))};
   const setVal=(i,v)=>{const s=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;s.call(i,v);i.dispatchEvent(new Event('input',{bubbles:true}))};
   const btn=document.createElement('button');
   btn.style.cssText='position:fixed;right:16px;bottom:16px;z-index:99999;background:#0696d7;color:#fff;border:0;border-radius:6px;padding:10px 14px;font:600 13px sans-serif;cursor:pointer;box-shadow:0 2px 8px #0004';
@@ -18,11 +18,11 @@
     for(const [label,opt] of [['Types','Files'],['File types','RVT']]){
       const lab=byText('label,div,span',new RegExp('^'+label+'$','i'));if(!lab)return false;
       const hdr=lab.closest('[class*=Header]')||lab.parentElement.parentElement;const box=(hdr&&hdr.parentElement&&hdr.parentElement.querySelector('[role=combobox]'))||lab.parentElement.querySelector('input,[role=combobox],[role=button]');if(!box)return false;
-      fire(box);await w(400);
-      const inp=document.activeElement&&document.activeElement.tagName==='INPUT'?document.activeElement:box.querySelector&&box.querySelector('input');
+      fire(box.querySelector&&box.querySelector('.SelectBox__control')||box);await w(400);
+      const inp=box.querySelector&&box.querySelector('.SelectBox__input,input');
       if(inp&&opt==='RVT'){setVal(inp,'RVT');await w(500)}
-      const o=await waitFor(()=>byText('[role=option],li,label',new RegExp('^'+opt+'$','i')),4000);if(!o)return false;fire(o);await w(300);
-      document.body.click();await w(300)}
+      const o=await waitFor(()=>[...document.querySelectorAll('[role=option],li.SelectBox__option')].find(e=>new RegExp('^'+opt+'$','i').test(txt(e))&&e.offsetParent!==null),4000);if(!o)return false;fire(o);await w(300);
+      fire(lab);await w(300)}
     const go=[...document.querySelectorAll('button')].reverse().find(e=>/^search$/i.test(txt(e))&&e.offsetParent!==null);if(!go)return false;fire(go);return true}
 
   async function scan(){
