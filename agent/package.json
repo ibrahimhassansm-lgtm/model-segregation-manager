@@ -1,0 +1,8 @@
+{
+  "name": "msm-forma-agent",
+  "version": "1.0.0",
+  "description": "Local helper for Model Segregation Manager: scans the models of an Autodesk Forma project in your own Chrome session (no API, no admin).",
+  "main": "agent.js",
+  "scripts": { "start": "node agent.js" },
+  "dependencies": { "playwright-core": "^1.48.0" }
+}
