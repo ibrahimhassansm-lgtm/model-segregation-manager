@@ -3,7 +3,7 @@
   const send=async()=>{
     try{const {msmForma}=await chrome.storage.local.get('msmForma');
       if(!msmForma||!msmForma.text||msmForma.sent)return;
-      post({type:'forma-list',text:msmForma.text,count:msmForma.count});
+      post({type:'forma-list',text:msmForma.text,count:msmForma.count,url:msmForma.url||''});
       await chrome.storage.local.set({msmForma:{...msmForma,sent:true}})}catch(e){}};
   chrome.storage.onChanged.addListener((c,a)=>{if(a==='local'&&c.msmForma)setTimeout(send,300)});
   window.addEventListener('message',async e=>{const d=e.data;if(e.source!==window||!d||d.source!=='msm-forma-page')return;

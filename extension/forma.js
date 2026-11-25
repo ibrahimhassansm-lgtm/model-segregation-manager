@@ -48,7 +48,7 @@
       window.__msmLinked=linked}
     if(text===null){say('Open Search > Files > RVT > Search first');btn.disabled=false;setTimeout(()=>say('Scan models for MSM'),4000);return}
     const count=text?text.split('\n').length:0;
-    try{await chrome.storage.local.set({msmForma:{text,ts:Date.now(),count}});await chrome.storage.local.remove('msmReq')}catch(e){}
+    try{await chrome.storage.local.set({msmForma:{text,ts:Date.now(),count,url:location.origin+location.pathname}});await chrome.storage.local.remove('msmReq')}catch(e){}
     try{await navigator.clipboard.writeText(text)}catch(e){}
     say('✓ '+count+' models sent to MSM'+(window.__msmLinked?' ('+window.__msmLinked+' with exact links)':''));btn.disabled=false;
     if(auto)setTimeout(()=>{try{window.close()}catch(e){}},1500);
