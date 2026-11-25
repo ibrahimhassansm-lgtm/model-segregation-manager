@@ -98,12 +98,21 @@ async function scan(projectUrl, project) {
     const t0 = Date.now();
     for (;;) {
       if (Date.now() - t0 > 10 * 60 * 1000) throw new Error('Timed out waiting for Forma to load. Sign in in the Chrome window and try again.');
-      const u = page.url();
-      if (u.includes(project) && await page.$('.MatrixTable__body, [role=tree], [role=row]')) break;
+      try {
+        const u = page.url();
+        if (u.includes(project) && await page.$('.MatrixTable__body, [role=tree], [role=row]')) break;
+      } catch (e) { /* page was navigating (sign-in redirect); check again */ }
       await new Promise(r => setTimeout(r, 2000));
     }
     await new Promise(r => setTimeout(r, 1500));
-    const res = await page.evaluate(inPage);
+    let res;
+    for (let i = 0; i < 6; i++) {
+      try { res = await page.evaluate(inPage); break; }
+      catch (e) {
+        if (!/context was destroyed|navigation|Target closed/i.test(String(e.message)) || i === 5) throw e;
+        await new Promise(r => setTimeout(r, 3000));
+      }
+    }
     if (res.error) throw new Error(res.error);
     await new Promise(r => setTimeout(r, 800));
     const base = projectUrl.split('?')[0];
@@ -128,7 +137,7 @@ const server = http.createServer(async (req, res) => {
     'Access-Control-Allow-Private-Network': 'true', 'Content-Type': 'application/json'
   };
   if (req.method === 'OPTIONS') { res.writeHead(204, h); return res.end(); }
-  if (req.url === '/ping') { res.writeHead(200, h); return res.end(JSON.stringify({ ok: true, version: '1.0.0' })); }
+  if (req.url === '/ping') { res.writeHead(200, h); return res.end(JSON.stringify({ ok: true, version: '1.0.1' })); }
   if (req.url === '/status') { res.writeHead(200, h); return res.end(JSON.stringify({ busy, status })); }
   if (req.url === '/scan' && req.method === 'POST') {
     let body = ''; req.on('data', c => { body += c; if (body.length > 1e5) req.destroy(); });
