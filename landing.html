@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Model Segregation Manager</title>
-<meta name="description" content="Plan, name and link every BIM model in one register. See the link matrix, the structure map and the codes for each project.">
-<meta property="og:title" content="Model Segregation Manager">
-<meta property="og:description" content="One register for every model, one plan for every link.">
+<title>BIM Unit tools</title>
+<meta name="description" content="Tools built by the BIM Unit at Azizi Developments VDEC Vasimos 360 to plan, check and link project models.">
+<meta property="og:title" content="BIM Unit tools">
+<meta property="og:description" content="Tools built by the BIM Unit to plan, check and link project models.">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#000000">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23181818'/%3E%3Crect x='7' y='8' width='10' height='6' rx='2' fill='%23fff'/%3E%3Crect x='15' y='18' width='10' height='6' rx='2' fill='%239B9B9B'/%3E%3C/svg%3E">
@@ -23,7 +23,7 @@ a{color:inherit}
 .mono{font-family:"Geist Mono",monospace}
 .skip{position:absolute;left:12px;top:-64px;background:var(--text);color:var(--bg);padding:8px 12px;border-radius:8px;z-index:20}
 .skip:focus{top:12px}
-.wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+.wrap{max-width:1040px;margin:0 auto;padding-left:24px;padding-right:24px}
 
 .heading-1{font-size:60px;line-height:60px;font-weight:600;text-wrap:balance}
 .heading-2{font-size:48px;line-height:48px;font-weight:600;text-wrap:balance}
@@ -46,7 +46,8 @@ a{color:inherit}
 
 nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:10;display:flex;align-items:center;gap:24px;padding:8px 8px 8px 16px;background:rgba(24,24,24,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--s3);border-radius:16px;white-space:nowrap}
 
-.hero{padding:160px 0 96px;text-align:center}
+.hero{padding-top:160px;padding-bottom:96px;text-align:center}
+.eyebrow{margin-bottom:24px}
 .hero h1,.hero .sub{max-width:680px;margin-left:auto;margin-right:auto}
 .hero .sub{margin-top:24px}
 .hero .act{margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:12px}
@@ -60,16 +61,18 @@ nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:10;displ
 .pill{display:inline-block;padding:2px 8px;border-radius:9999px;background:var(--s3)}
 .scroll{overflow-x:auto}
 
-section{padding:96px 0}
+section.wrap{padding-top:96px;padding-bottom:96px}
 .head{max-width:680px;margin-bottom:48px}
 .head p{margin-top:12px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 .card{background:var(--s1);border:1px solid var(--s3);border-radius:16px;padding:24px;transition:background-color 300ms var(--ease),transform 500ms var(--ease)}
 .card:hover{background:var(--s2);transform:translateY(-4px)}
-.card i{font-size:24px;display:block;margin-bottom:16px}
+.card i.ic{font-size:24px;display:block;margin-bottom:16px}
 .card p{margin-top:8px}
-
-.split{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.tool{display:flex;flex-direction:column;align-items:flex-start;gap:16px}
+.tool .btn{margin-top:8px}
+.soon{border-style:dashed}
+.soon:hover{background:var(--s1);transform:none}
 
 .tagline{max-width:680px;margin:0 auto;text-align:center}
 .tagline .w{color:rgba(255,255,255,.3);transition:color 500ms var(--ease)}
@@ -88,9 +91,12 @@ summary i{transition:transform 500ms var(--ease);flex:none}
 details[open] summary i{transform:rotate(45deg)}
 details p{padding:0 16px 16px}
 
+.credit{max-width:680px;margin:0 auto;text-align:center}
+.credit p{margin-top:12px}
 .final{text-align:center}
 .final .act{margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:12px}
 footer{border-top:1px solid var(--s3);padding:32px 0}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 
 .rv{opacity:0;transform:translateY(32px);transition:opacity 700ms var(--ease),transform 700ms var(--ease)}
 .rv.in{opacity:1;transform:none}
@@ -99,9 +105,8 @@ footer{border-top:1px solid var(--s3);padding:32px 0}
  .heading-1{font-size:36px;line-height:40px}
  .heading-2{font-size:30px;line-height:36px}
  .heading-3{font-size:24px;line-height:32px}
- .hero{padding:128px 0 64px}
- section{padding:64px 0}
- .split{grid-template-columns:1fr;gap:32px}
+ .hero{padding-top:128px;padding-bottom:64px}
+ section.wrap{padding-top:64px;padding-bottom:64px}
  nav{gap:16px}
 }
 @media(prefers-reduced-motion:reduce){
@@ -115,16 +120,17 @@ footer{border-top:1px solid var(--s3);padding:32px 0}
 <a class="skip button-sm" href="#main">Skip to content</a>
 
 <nav aria-label="Main">
-  <span class="title-3">Model Segregation Manager</span>
-  <a class="btn button-sm" href="./">Open the app</a>
+  <span class="title-3">BIM Unit</span>
+  <a class="btn button-sm" href="#tools">Tools</a>
 </nav>
 
 <main id="main">
   <header class="hero wrap">
-    <h1 class="heading-1 grad">Plan every model and every link in one register</h1>
-    <p class="sub body-3 mute">Model Segregation Manager is where your BIM team names each model, sets which models link to which, and sees how the project is structured. No more asking which file is the right one.</p>
+    <p class="eyebrow caption-1 mute">Azizi Developments &middot; VDEC &middot; Vasimos 360</p>
+    <h1 class="heading-1 grad">The BIM Unit toolkit for every project</h1>
+    <p class="sub body-3 mute">Tools built by the BIM Unit to plan, check and link project models, so the team works from one source instead of many files. More tools are on the way.</p>
     <div class="act">
-      <a class="btn button-lg" href="./"><i class="ph ph-arrow-up-right" aria-hidden="true"></i>Open the app</a>
+      <a class="btn button-lg" href="./"><i class="ph ph-arrow-up-right" aria-hidden="true"></i>Open Model Segregation Manager</a>
       <span class="caption-1 mute">Runs in your browser. Nothing to install.</span>
     </div>
     <div class="preview rv" role="img" aria-label="Preview of the model register table">
@@ -141,31 +147,38 @@ footer{border-top:1px solid var(--s3);padding:32px 0}
     </div>
   </header>
 
-  <section class="wrap" aria-label="The problem and the answer">
-    <div class="split">
-      <div class="rv">
-        <h2 class="heading-3">The link plan lives in too many places</h2>
-        <p class="body-3 mute" style="margin-top:16px">Model names sit in one sheet, links in another, and the structure in someone's head. When a model is added, nobody is sure what it should link to.</p>
+  <section id="tools" class="wrap" aria-labelledby="tl">
+    <div class="head rv">
+      <h2 id="tl" class="heading-2">BIM Unit tools</h2>
+      <p class="body-3 mute">Every tool the BIM Unit builds will be listed here. The first one is live.</p>
+    </div>
+    <div class="grid">
+      <div class="card tool rv">
+        <div><i class="ic ph ph-stack" aria-hidden="true"></i><h3 class="title-1">Model Segregation Manager</h3>
+        <p class="body-6 mute">The register for every model in a project: codes, link matrix, structure map and templates.</p></div>
+        <span class="pill caption-4">Available</span>
+        <a class="btn button-sm" href="./">Open the app</a>
       </div>
-      <div class="rv">
-        <h2 class="heading-3">One register replaces all of them</h2>
-        <p class="body-3 mute" style="margin-top:16px">Every model has a code, a type and a place in the project. The links between models are set once and everyone reads the same answer.</p>
+      <div class="card tool soon rv">
+        <div><i class="ic ph ph-hourglass" aria-hidden="true"></i><h3 class="title-1">Next tool</h3>
+        <p class="body-6 mute">A new BIM Unit tool is in progress and will appear here.</p></div>
+        <span class="pill caption-4">Coming soon</span>
       </div>
     </div>
   </section>
 
-  <section class="wrap" aria-labelledby="ben">
+  <section class="wrap" aria-labelledby="msm">
     <div class="head rv">
-      <h2 id="ben" class="heading-2">What you get</h2>
+      <h2 id="msm" class="heading-2">Inside Model Segregation Manager</h2>
       <p class="body-3 mute">Each part of the project has its own view, so you open the one you need.</p>
     </div>
     <div class="grid">
-      <div class="card rv"><i class="ph ph-table" aria-hidden="true"></i><h3 class="title-1">Model register</h3><p class="body-6 mute">Every model with its code, discipline, zone and type. Group it, filter it, and find any model fast.</p></div>
-      <div class="card rv"><i class="ph ph-link" aria-hidden="true"></i><h3 class="title-1">Link matrix</h3><p class="body-6 mute">See which models link to which. Missing and extra links stand out instead of hiding in a list.</p></div>
-      <div class="card rv"><i class="ph ph-tree-structure" aria-hidden="true"></i><h3 class="title-1">Structure and map</h3><p class="body-6 mute">Read how the project is built and where each model sits, without opening folders.</p></div>
-      <div class="card rv"><i class="ph ph-hash" aria-hidden="true"></i><h3 class="title-1">Naming codes</h3><p class="body-6 mute">Discipline, zone and type codes are stored in the project, so new models follow the same rules.</p></div>
-      <div class="card rv"><i class="ph ph-copy" aria-hidden="true"></i><h3 class="title-1">Project templates</h3><p class="body-6 mute">Start a new project from an existing one and keep what carries over instead of rebuilding the register.</p></div>
-      <div class="card rv"><i class="ph ph-users-three" aria-hidden="true"></i><h3 class="title-1">Roles and activity</h3><p class="body-6 mute">Decide who can edit and who can only view, and check the activity log to see what changed.</p></div>
+      <div class="card rv"><i class="ic ph ph-table" aria-hidden="true"></i><h3 class="title-1">Model register</h3><p class="body-6 mute">Every model with its code, discipline, zone and type. Group it, filter it, and find any model fast.</p></div>
+      <div class="card rv"><i class="ic ph ph-link" aria-hidden="true"></i><h3 class="title-1">Link matrix</h3><p class="body-6 mute">See which models link to which. Missing and extra links stand out instead of hiding in a list.</p></div>
+      <div class="card rv"><i class="ic ph ph-tree-structure" aria-hidden="true"></i><h3 class="title-1">Structure and map</h3><p class="body-6 mute">Read how the project is built and where each model sits, without opening folders.</p></div>
+      <div class="card rv"><i class="ic ph ph-hash" aria-hidden="true"></i><h3 class="title-1">Naming codes</h3><p class="body-6 mute">Discipline, zone and type codes are stored in the project, so new models follow the same rules.</p></div>
+      <div class="card rv"><i class="ic ph ph-copy" aria-hidden="true"></i><h3 class="title-1">Project templates</h3><p class="body-6 mute">Start a new project from an existing one and keep what carries over instead of rebuilding the register.</p></div>
+      <div class="card rv"><i class="ic ph ph-users-three" aria-hidden="true"></i><h3 class="title-1">Roles and activity</h3><p class="body-6 mute">Decide who can edit and who can only view, and check the activity log to see what changed.</p></div>
     </div>
   </section>
 
@@ -189,26 +202,36 @@ footer{border-top:1px solid var(--s3);padding:32px 0}
       <h2 id="faq" class="heading-2">Questions</h2>
     </div>
     <div class="faq rv">
-      <details><summary class="title-3">Do I need to install anything?<i class="ph ph-plus" aria-hidden="true"></i></summary><p class="body-3 mute">No. It runs in your browser. Open it and sign in.</p></details>
+      <details><summary class="title-3">Do I need to install anything?<i class="ph ph-plus" aria-hidden="true"></i></summary><p class="body-3 mute">No. The tools run in your browser. Open them and sign in.</p></details>
       <details><summary class="title-3">Can several people work on the same project?<i class="ph ph-plus" aria-hidden="true"></i></summary><p class="body-3 mute">Yes. Projects are shared, so the whole team reads and works from the same register.</p></details>
       <details><summary class="title-3">Can I control who edits the register?<i class="ph ph-plus" aria-hidden="true"></i></summary><p class="body-3 mute">Yes. Roles decide who can edit and who can only view.</p></details>
       <details><summary class="title-3">Can I start a new project from an old one?<i class="ph ph-plus" aria-hidden="true"></i></summary><p class="body-3 mute">Yes. Save a project as a template, then create new projects from it and adjust what differs.</p></details>
       <details><summary class="title-3">What does the link matrix show?<i class="ph ph-plus" aria-hidden="true"></i></summary><p class="body-3 mute">It shows which models are linked into which other models, so a missing or unexpected link is easy to spot.</p></details>
-      <details><summary class="title-3">Can I see what changed in a project?<i class="ph ph-plus" aria-hidden="true"></i></summary><p class="body-3 mute">Yes. The activity view lists the changes made to a project.</p></details>
+      <details><summary class="title-3">Will there be more tools?<i class="ph ph-plus" aria-hidden="true"></i></summary><p class="body-3 mute">Yes. The BIM Unit is building more, and each one will be listed on this page when it is ready.</p></details>
+    </div>
+  </section>
+
+  <section class="wrap" aria-labelledby="by">
+    <div class="credit rv">
+      <h2 id="by" class="heading-3">Built by Ibrahim Hassan</h2>
+      <p class="body-3 mute">MEP BIM Coordinator, BIM Unit. Designed and developed for the teams at Azizi Developments, VDEC and Vasimos 360.</p>
     </div>
   </section>
 
   <section class="wrap final" aria-labelledby="end">
-    <h2 id="end" class="heading-2 grad rv" style="max-width:680px;margin:0 auto">Plan every model and every link in one register</h2>
+    <h2 id="end" class="heading-2 grad rv" style="max-width:680px;margin:0 auto">Start with the register</h2>
     <div class="act">
-      <a class="btn button-lg" href="./"><i class="ph ph-arrow-up-right" aria-hidden="true"></i>Open the app</a>
+      <a class="btn button-lg" href="./"><i class="ph ph-arrow-up-right" aria-hidden="true"></i>Open Model Segregation Manager</a>
       <span class="caption-1 mute">Runs in your browser. Nothing to install.</span>
     </div>
   </section>
 </main>
 
 <footer>
-  <div class="wrap"><span class="caption-1 mute">Model Segregation Manager</span></div>
+  <div class="wrap">
+    <span class="caption-1 mute">BIM Unit &middot; Azizi Developments &middot; VDEC &middot; Vasimos 360</span>
+    <span class="caption-1 mute">Created by Ibrahim Hassan</span>
+  </div>
 </footer>
 
 <script>
