@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Model Segregation Manager</title>
+<meta name="description" content="Plan, name and link every BIM model in one register: link matrix, structure map, codes and project templates.">
+<style>
+:root{--bg:#f6f5f1;--card:#fff;--ink:#1d2327;--mute:#5c6670;--line:#e2e0d8;--brand:#1f5c7a;--brand-ink:#fff;--soft:#e8f0f4}
+@media(prefers-color-scheme:dark){:root{--bg:#14181b;--card:#1b2024;--ink:#eceff1;--mute:#9aa5ae;--line:#2a3238;--brand:#5fa8c9;--brand-ink:#0d1418;--soft:#1f2b32}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.logo{font-weight:600;letter-spacing:.2px}
+.btn{display:inline-block;background:var(--brand);color:var(--brand-ink);text-decoration:none;font-weight:600;padding:11px 20px;border-radius:8px;border:0}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.hero{padding:56px 0 40px;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+h1{font-size:clamp(32px,5vw,50px);line-height:1.1;margin:0 0 16px;font-weight:700;letter-spacing:-.5px}
+.lead{font-size:18px;color:var(--mute);margin:0 0 24px;max-width:46ch}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+.shot{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:12px}
+.shot .bar{display:flex;gap:6px;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--soft)}
+.shot .bar i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.shot table{width:100%;border-collapse:collapse}
+.shot td,.shot th{padding:7px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+.shot th{color:var(--mute);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+.tag{display:inline-block;padding:1px 8px;border-radius:99px;background:var(--soft);font-size:11px}
+.mono{font-family:ui-monospace,Consolas,monospace}
+section{padding:44px 0}
+h2{font-size:28px;margin:0 0 8px;letter-spacing:-.3px}
+.sub{color:var(--mute);margin:0 0 28px;max-width:60ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
+.card h3{margin:0 0 6px;font-size:17px}
+.card p{margin:0;color:var(--mute);font-size:15px}
+.steps{counter-reset:s;display:grid;gap:14px;max-width:720px}
+.steps div{display:flex;gap:14px;align-items:flex-start}
+.steps div:before{counter-increment:s;content:counter(s);flex:none;width:30px;height:30px;border-radius:50%;background:var(--brand);color:var(--brand-ink);display:grid;place-items:center;font-weight:600;font-size:14px}
+.steps b{display:block}
+.steps span{color:var(--mute);font-size:15px}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:10px}
+summary{cursor:pointer;font-weight:600}
+details p{margin:10px 0 0;color:var(--mute)}
+.band{background:var(--soft);border-radius:16px;padding:36px;text-align:center;margin:20px 0 48px}
+footer{border-top:1px solid var(--line);padding:24px 0;color:var(--mute);font-size:14px}
+@media(max-width:820px){.hero{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="logo">Model Segregation Manager</span>
+    <a class="btn" href="./">Open MSM</a>
+  </header>
+
+  <div class="hero">
+    <div>
+      <h1>Every model, link and zone, planned in one place.</h1>
+      <p class="lead">Model Segregation Manager is the register your BIM team works from: coded model names, who links to whom, and where each model lives in the structure.</p>
+      <div class="cta">
+        <a class="btn" href="./">Open MSM</a>
+        <a class="btn ghost" href="#features">See what it does</a>
+      </div>
+    </div>
+    <div class="shot" aria-hidden="true">
+      <div class="bar"><i></i><i></i><i></i></div>
+      <table>
+        <tr><th>Model</th><th>Type</th><th>Links</th></tr>
+        <tr><td class="mono">XXX-ARC-TA-RVT-0001</td><td><span class="tag">Main model</span></td><td>4</td></tr>
+        <tr><td class="mono">XXX-ARC-U1-RVT-0001</td><td><span class="tag">Unit model</span></td><td>2</td></tr>
+        <tr><td class="mono">XXX-STR-ZZ-RVT-0001</td><td><span class="tag">Typical model</span></td><td>3</td></tr>
+        <tr><td class="mono">XXX-MEC-OA-RVT-0001</td><td><span class="tag">Main model</span></td><td>5</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <section id="features">
+    <h2>What it does</h2>
+    <p class="sub">One page per project, built around the way model segregation is actually planned.</p>
+    <div class="grid">
+      <div class="card"><h3>Model register</h3><p>Every model with its code, discipline, zone and type, grouped and filterable, so the list is never a spreadsheet you have to trust.</p></div>
+      <div class="card"><h3>Link matrix</h3><p>See which models link to which, spot missing or extra links, and keep the link plan in one agreed place.</p></div>
+      <div class="card"><h3>Model structure and map</h3><p>View the structure of the project and how models sit inside it, instead of reading it from folder names.</p></div>
+      <div class="card"><h3>Codes</h3><p>Naming codes for disciplines, zones and types live in the project, so new models follow the same rules.</p></div>
+      <div class="card"><h3>Project templates</h3><p>Start a new project from an existing one and keep what carries over, instead of rebuilding the register.</p></div>
+      <div class="card"><h3>Roles and activity</h3><p>Control who can edit, and see an activity log of what changed and when.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <div class="steps" style="margin-top:20px">
+      <div><p style="margin:0"><b>Open a project or start one</b><span>Pick an existing project, or create one from a template.</span></p></div>
+      <div><p style="margin:0"><b>Register the models</b><span>Add models with their codes and set which models they link to.</span></p></div>
+      <div><p style="margin:0"><b>Check and share</b><span>Review the link matrix and structure, then work from the same register as the rest of the team.</span></p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Questions</h2>
+    <details><summary>Do I need to install anything?</summary><p>No. MSM runs in your browser. Open it and sign in.</p></details>
+    <details><summary>Can several people use the same project?</summary><p>Yes. Projects are shared and roles decide who can edit and who can only view.</p></details>
+    <details><summary>Can I start a new project from an old one?</summary><p>Yes. Save a project as a template and create new projects from it.</p></details>
+  </section>
+
+  <div class="band">
+    <h2 style="margin-bottom:14px">Ready to open your register?</h2>
+    <a class="btn" href="./">Open MSM</a>
+  </div>
+
+  <footer>Model Segregation Manager</footer>
+</div>
+</body>
+</html>
